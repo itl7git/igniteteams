@@ -7,10 +7,13 @@ import { ButtonIcon } from '@components/ButtonIcon'
 import { Filter } from '@components/Filter'
 
 import { Container, Form, HeaderList, NumberofPlayers } from './styles'
+import { PlayerCard } from '@components/PlayerCard'
+import { ListEmpty } from '@components/ListEmpty'
+import { Button } from '@components/Button'
 
 export function Players() {
   const [team, setTeam] = useState('Time A')
-  const [player, setPlayers] = useState([])
+  const [players, setPlayers] = useState([])
 
   return (
     <Container>
@@ -45,9 +48,35 @@ export function Players() {
         />
 
         <NumberofPlayers>
-          {player.length}
+          {players.length}
         </NumberofPlayers>
       </HeaderList>
+
+      <FlatList
+        data={players}
+        keyExtractor={item => item}
+        renderItem={({ item }) => (
+          <PlayerCard
+            name={item}
+            onRemove={() => { }}
+          />
+        )}
+        ListEmptyComponent={() => (
+          <ListEmpty
+            message="Que tal cadastrar a primeira turma?"
+          />
+        )}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={[
+          { paddingBottom: 100 },
+          players.length === 0 && { flex: 1 }
+        ]}
+      />
+
+      <Button
+        title="Remover turma"
+        type="SECUNDARY"
+      />
     </Container>
   )
 }

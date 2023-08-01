@@ -10,6 +10,8 @@ import { Groups } from '@screens/Groups';
 import { NewGroup } from '@screens/NewGroup';
 import { Players } from '@screens/Players';
 
+import { Routes } from './src/routes'
+
 export default function App() {
   const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold })
 
@@ -20,7 +22,7 @@ export default function App() {
         backgroundColor='transparent'
         translucent
       />
-      {fontsLoaded ? <Players /> : <Loading />}
+      {fontsLoaded ? <Routes /> : <Loading />}
     </ThemeProvider>
   );
 }

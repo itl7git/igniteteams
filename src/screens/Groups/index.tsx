@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
-import { FlatList } from 'react-native';
+import { Alert, FlatList } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
+import { AppError } from '@utils/AppError';
 
 import { Header } from '@components/Header';
 import { Container } from './styles';
@@ -24,7 +25,7 @@ export function Groups() {
       const data = await groupsGetAll()
       setGroups(data)
     } catch (error) {
-      console.error(error)
+      console.log(error)
     }
   }
 

@@ -1,7 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRoute } from '@react-navigation/native'
 import { Alert, FlatList } from 'react-native'
+
 import { AppError } from '@utils/AppError'
+import { playAddByGroup } from '@storage/player/playerAddByGroup'
+import { playersGetByGroupAndTeam } from '@storage/player/playerGetByGroupAndTeam'
+import { PlayerStorageDTO } from '@storage/player/PlayerStorageDTO'
 
 import { Header } from '@components/Header'
 import { Highlight } from '@components/Highlight'
@@ -15,7 +19,6 @@ import { Button } from '@components/Button'
 
 import { Container, Form, HeaderList, NumberofPlayers } from './styles'
 
-import { playAddByGroup } from '@storage/player/playerAddByGroup'
 
 type RouteParams = {
   group: string
@@ -24,7 +27,7 @@ type RouteParams = {
 export function Players() {
   const [newPlayName, setNewPlayerName] = useState('')
   const [team, setTeam] = useState('Time A')
-  const [players, setPlayers] = useState([])
+  const [players, setPlayers] = useState<PlayerStorageDTO[]>([])
 
   const route = useRoute()
   const { group } = route.params as RouteParams
@@ -41,6 +44,7 @@ export function Players() {
 
     try {
       await playAddByGroup(newPlayer, group)
+      fetchPlayersByTeam()
 
     } catch (error) {
       if (error instanceof AppError) {
@@ -49,8 +53,21 @@ export function Players() {
         Alert.alert('Nova pessoa', 'Não foi possível adicionar')
       }
     }
-
   }
+
+  async function fetchPlayersByTeam() {
+    try {
+      const playersByTeam = await playersGetByGroupAndTeam(group, team)
+      setPlayers(playersByTeam)
+    } catch (error) {
+      Alert.alert('Pessoas', 'Não foi possível carregar as pessoas do time selecionado')
+    }
+  }
+
+  useEffect(() => {
+    fetchPlayersByTeam()
+  }, [team])
+
   return (
     <Container>
       <Header showBackButton />
@@ -94,10 +111,10 @@ export function Players() {
 
       <FlatList
         data={players}
-        keyExtractor={item => item}
+        keyExtractor={item => item.name}
         renderItem={({ item }) => (
           <PlayerCard
-            name={item}
+            name={item.name}
             onRemove={() => { }}
           />
         )}

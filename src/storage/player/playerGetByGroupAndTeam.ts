@@ -1,5 +1,3 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import { playersGetByGroup } from './playersGetByGroup'
 
 export async function playersGetByGroupAndTeam(group: string, team: string) {
